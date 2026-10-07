@@ -1,0 +1,14 @@
+(()=>{const d=document,root=d.documentElement;
+const h=d.querySelector('.site-header');const sc=()=>h&&h.classList.toggle('scrolled',scrollY>8);sc();addEventListener('scroll',sc,{passive:true});
+const mt=d.querySelector('.menu-toggle'),menu=d.getElementById('menu');
+mt&&mt.addEventListener('click',()=>{const o=menu.classList.toggle('open');mt.setAttribute('aria-expanded',o)});
+d.querySelectorAll('.sub-toggle').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement,o=li.classList.toggle('open');b.setAttribute('aria-expanded',o)}));
+d.addEventListener('click',e=>{d.querySelectorAll('.has-sub.open').forEach(li=>{if(!li.contains(e.target)){li.classList.remove('open');li.firstElementChild.setAttribute('aria-expanded',false)}})});
+d.addEventListener('keydown',e=>{if(e.key==='Escape'){d.querySelectorAll('.has-sub.open').forEach(li=>li.classList.remove('open'));menu&&menu.classList.remove('open');mt&&mt.setAttribute('aria-expanded',false)}});
+const tt=d.querySelector('.theme-toggle');tt&&tt.addEventListener('click',()=>{const dark=root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;const n=dark?'light':'dark';root.dataset.theme=n;try{localStorage.setItem('theme',n)}catch(e){}});
+const els=d.querySelectorAll('.reveal');
+if('IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion: reduce)').matches){const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{rootMargin:'0px 0px -8% 0px'});els.forEach(el=>io.observe(el))}else els.forEach(el=>el.classList.add('in'));
+d.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{const f=c.dataset.f;d.querySelectorAll('.chip').forEach(x=>{x.classList.toggle('is-on',x===c);x.setAttribute('aria-pressed',x===c)});d.querySelectorAll('.post-card').forEach(p=>p.classList.toggle('hide',f!=='all'&&!p.dataset.cats.split(' ').includes(f)))}));
+const f=d.getElementById('contact');f&&f.addEventListener('submit',e=>{e.preventDefault();const em=f.email.value.trim(),err=f.querySelector('.form-err');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){err.hidden=false;f.email.focus();return}err.hidden=true;
+const body=`Name: ${f.name.value}\nEmail: ${em}\n\n${f.message.value}`;location.href=`mailto:${f.dataset.mail}?subject=${encodeURIComponent('Drop me a line! — from '+(f.name.value||em))}&body=${encodeURIComponent(body)}`});
+})();
